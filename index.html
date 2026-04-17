@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مكاننا الخاص</title>
+    <title>إلى الأبد</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
         
@@ -13,45 +13,51 @@
             font-family: 'Amiri', serif; overflow: hidden;
         }
 
-        /* ستار النجوم */
+        /* خلفية النجوم المتحركة */
         #canvas { position: absolute; width: 100%; height: 100%; z-index: 0; }
 
         /* نافذة كلمة السر */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 7, 10, 0.95);
+            background: rgba(5, 7, 10, 0.98);
             display: flex; justify-content: center; align-items: center;
-            z-index: 100; transition: 1s;
+            z-index: 100; transition: 1.5s;
         }
 
         .login-box {
-            text-align: center; padding: 30px; border: 1px solid #d4af37;
-            border-radius: 15px; background: rgba(255, 255, 255, 0.05);
+            text-align: center; padding: 40px; border: 1px solid #d4af37;
+            border-radius: 20px; background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
+
+        h2 { color: #d4af37; margin-bottom: 20px; }
 
         input {
             background: transparent; border: none; border-bottom: 2px solid #d4af37;
             color: white; padding: 10px; text-align: center; font-size: 1.2rem;
-            outline: none; margin-bottom: 20px; width: 200px;
+            outline: none; margin-bottom: 25px; width: 220px;
         }
 
         button {
-            background: #d4af37; border: none; padding: 10px 30px;
-            color: black; font-weight: bold; border-radius: 5px; cursor: pointer;
+            background: #d4af37; border: none; padding: 12px 40px;
+            color: black; font-weight: bold; border-radius: 30px; 
+            cursor: pointer; font-size: 1.1rem; transition: 0.3s;
         }
 
-        /* المحتوى المخفي */
+        button:hover { background: #f1c40f; transform: scale(1.05); }
+
+        /* المحتوى الرئيسي للموقع */
         #main-content {
             position: relative; z-index: 1; display: none;
             text-align: center; padding: 20px;
         }
 
-        h1 { color: #d4af37; font-size: 2.5rem; margin-top: 20vh; }
-        .message { font-size: 1.6rem; line-height: 2; max-width: 700px; margin: auto; }
-        .highlight { color: #d4af37; font-weight: bold; }
+        h1 { color: #d4af37; font-size: 2.5rem; margin-top: 15vh; margin-bottom: 30px; }
+        .message { font-size: 1.6rem; line-height: 2.2; max-width: 800px; margin: auto; }
+        .highlight { color: #d4af37; font-weight: bold; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
         
-        /* تأثير الظهور التدريجي */
-        .fade-in { opacity: 0; transform: translateY(20px); transition: 2s; }
+        /* تأثير الظهور التدريجي للأسطر */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: 2.5s; margin-bottom: 20px; }
         .show { opacity: 1; transform: translateY(0); }
     </style>
 </head>
@@ -61,8 +67,8 @@
 
     <div id="lock-screen">
         <div class="login-box">
-            <h2>مكانٌ لا يدخلهُ إلا أصحابه</h2>
-            <p>أدخلي كلمة السر التي تفتح باب عهدنا</p>
+            <h2>مكانٌ لا يدخلهُ إلا عهدنا</h2>
+            <p>أدخلي كلمة السر التي تفتح باب ذكرياتنا</p>
             <input type="password" id="passInput" placeholder="كلمة السر...">
             <br>
             <button onclick="checkPass()">دخول</button>
@@ -72,57 +78,68 @@
     <div id="main-content">
         <h1 class="fade-in">إلى مَن اختارها قلبي..</h1>
         <div class="message">
-            <p class="fade-in">سنتانِ مَضتا.. واليقينُ بداخلي لا يَهتز.</p>
-            <p class="fade-in">سافِري، انجحي، وكوني الأعظم..</p>
-            <p class="fade-in">لكن تذكري أن <span class="highlight">"النصيب"</span> ينتظرُ إشارةً منكِ.</p>
-            <p class="fade-in">أنا هُنا، وسأبقى هُنا.. لأنكِ الوطن والملجأ.</p>
+            <p class="fade-in">منذُ أول يومٍ التقيتُكِ بهِ أحببتُكِ، وإلى الآن قلبي لكِ فقط.</p>
+            <p class="fade-in">سافري، حققي أحلامكِ، وافتحي للعالمِ أبواباً جديدة..</p>
+            <p class="fade-in">تذكري دائماً أنكِ <span class="highlight">أنتِ الأفضل وأنتِ الأجمل</span> بعيوني وبعيون الكل.</p>
+            <p class="fade-in">طموحكِ يشبهكِ، والنجاحُ ينتظركِ لأنكِ تستحقينه..</p>
+            <p class="fade-in">أنا هنا، وسأبقى هنا.. السندُ الذي لا يميل، والوطنُ الذي ينتظرُ رجوعكِ.</p>
         </div>
+        
         <audio id="bgMusic" loop>
             <source src="music.mp3" type="audio/mpeg">
         </audio>
     </div>
 
     <script>
-        // كود النجوم (Canvas)
+        // نظام النجوم الخلفية
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
         let stars = [];
-        for(let i=0; i<200; i++) stars.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, r: Math.random()*1.5, d: Math.random()*200});
+        for(let i=0; i<250; i++) {
+            stars.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                r: Math.random() * 1.5,
+                opacity: Math.random()
+            });
+        }
         function draw() {
             ctx.clearRect(0,0,canvas.width, canvas.height);
-            ctx.fillStyle = "white";
             stars.forEach(s => {
-                ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${s.opacity})`;
+                ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+                ctx.fill();
             });
         }
         setInterval(draw, 50);
 
-        // التحقق من كلمة السر
+        // وظيفة التحقق من كلمة السر
         function checkPass() {
             const pass = document.getElementById('passInput').value;
-            // غير كلمة "2026" لأي كلمة سر بدك ياها
-            if(pass === "2023/1/12") {
+            // يمكنك تغيير "2026" لأي كلمة سر أخرى
+            if(pass === "2026") {
                 document.getElementById('lock-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
-                    document.getElementById('bgMusic').play();
+                    document.getElementById('bgMusic').play(); // تشغيل الأغنية
                     showText();
-                }, 1000);
+                }, 1500);
             } else {
                 alert("كلمة سر خاطئة.. حاولي مجدداً بقلبك.");
             }
         }
 
-        // إظهار النص سطر بسطر
+        // إظهار النص سطر بسطر مع توقيت مريح للعين
         function showText() {
             const elements = document.querySelectorAll('.fade-in');
             elements.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.add('show');
-                }, index * 2500); // كل سطر يظهر بعد ثانيتين ونصف
+                }, index * 3000); // يظهر سطر جديد كل 3 ثوانٍ
             });
         }
     </script>
