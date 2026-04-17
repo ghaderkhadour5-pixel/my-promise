@@ -11,11 +11,25 @@
             margin: 0; padding: 0; width: 100%; height: 100%;
             background: #05070a; color: white;
             font-family: 'Amiri', serif;
-            /* السماح بالـ Scroll */
             overflow-x: hidden; 
         }
 
         #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+
+        /* اسم "فرح" في الخلفية */
+        .name-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 15vw; /* حجم كبير ومتجاوب */
+            color: rgba(212, 175, 55, 0.05); /* شفافية خفيفة جداً ليكون أنيق */
+            z-index: 0;
+            user-select: none;
+            pointer-events: none;
+            white-space: nowrap;
+            font-weight: bold;
+        }
 
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -30,8 +44,6 @@
             box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
         }
 
-        h2 { color: #d4af37; margin-bottom: 20px; }
-
         input {
             background: transparent; border: none; border-bottom: 2px solid #d4af37;
             color: white; padding: 10px; text-align: center; font-size: 1.2rem;
@@ -40,30 +52,25 @@
 
         button {
             background: #d4af37; border: none; padding: 12px 40px;
-            color: black; font-weight: bold; border-radius: 30px; 
-            cursor: pointer; font-size: 1.1rem; transition: 0.3s;
+            color: black; font-weight: bold; border-radius: 30px; cursor: pointer;
         }
-
-        button:hover { background: #f1c40f; transform: scale(1.05); }
 
         #main-content {
             position: relative; z-index: 1; display: none;
-            text-align: center; padding: 20px 20px 100px 20px; /* مسافة من تحت للـ Scroll */
+            text-align: center; padding: 20px 20px 120px 20px; 
         }
 
         h1 { color: #d4af37; font-size: 2.5rem; margin-top: 10vh; margin-bottom: 30px; }
         .message { font-size: 1.6rem; line-height: 2.2; max-width: 800px; margin: auto; }
-        .highlight { color: #d4af37; font-weight: bold; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        .highlight { color: #d4af37; font-weight: bold; }
         
         .fade-in { opacity: 0; transform: translateY(30px); transition: 2.5s; margin-bottom: 30px; }
         .show { opacity: 1; transform: translateY(0); }
 
-        /* سهم النزول */
         .scroll-hint {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: none; flex-direction: column; align-items: center;
-            color: #d4af37; font-size: 0.9rem; animation: bounce 2s infinite;
-            z-index: 10;
+            color: #d4af37; font-size: 1rem; animation: bounce 2s infinite;
         }
 
         @keyframes bounce {
@@ -76,10 +83,12 @@
 <body>
 
     <canvas id="canvas"></canvas>
+    
+    <div class="name-watermark">فرح</div>
 
     <div id="lock-screen">
         <div class="login-box">
-            <h2>مكانٌ لا يدخلهُ إلا أاصحابهُ</h2>
+            <h2>مكانٌ لا يدخلهُ إلا لأصحابهُ</h2>
             <p>أدخلي كلمة السر التي تفتح باب ذكرياتنا</p>
             <input type="password" id="passInput" placeholder="كلمة السر...">
             <br>
@@ -93,6 +102,10 @@
             <p class="fade-in">منذُ أول يومٍ التقيتُكِ بهِ أحببتُكِ، وإلى الآن قلبي لكِ فقط.</p>
             <p class="fade-in">سافري، حققي أحلامكِ، وافتحي للعالمِ أبواباً جديدة..</p>
             <p class="fade-in">تذكري دائماً أنكِ <span class="highlight">أنتِ الأفضل وأنتِ الأجمل</span> بعيوني وبعيون الكل.</p>
+            
+            <p class="fade-in">الأيام الجاية يمكن تكون صعبة بالبداية، بس تذكري إنو غدير عم يدعيلك بكل ثانية.</p>
+            <p class="fade-in">بدي إياكِ تواجهي العالم بقلب قوي، وتذكري دايماً إنو في قلب ناطرك وعيون ما بتتمنى تشوفك إلا بالقمة.</p>
+            
             <p class="fade-in">طموحكِ يشبهكِ، والنجاحُ ينتظركِ لأنكِ تستحقينه..</p>
             <p class="fade-in">أنا هنا، وسأبقى هنا.. السندُ الذي لا يميل، والوطنُ الذي ينتظرُ رجوعكِ.</p>
         </div>
@@ -103,12 +116,11 @@
 
         <div id="scroll-arrow" class="scroll-hint">
             <span>اسحبي للأسفل</span>
-            <div style="font-size: 20px;">↓</div>
+            <div style="font-size: 22px;">↓</div>
         </div>
     </div>
 
     <script>
-        // نظام مطر القلوب الرومانسي
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -119,14 +131,13 @@
         function createHeart() {
             return {
                 x: Math.random() * canvas.width,
-                y: -10, // تبدأ من فوق الشاشة
-                size: Math.random() * 8 + 4, // حجم عشوائي للقلوب
-                speed: Math.random() * 1.5 + 0.5, // سرعة نزول هادية
-                opacity: Math.random() * 0.5 + 0.2 // شفافية متغيرة
+                y: -20,
+                size: Math.random() * 8 + 5,
+                speed: Math.random() * 1.2 + 0.6,
+                opacity: Math.random() * 0.6 + 0.2
             };
         }
 
-        // دالة رسم القلب (كود رياضي بسيط لرسم شكل قلب)
         function drawHeart(x, y, size, opacity) {
             ctx.save();
             ctx.beginPath();
@@ -135,7 +146,7 @@
             ctx.moveTo(0, 0);
             ctx.bezierCurveTo(5, -5, 10, 0, 0, 10);
             ctx.bezierCurveTo(-10, 0, -5, -5, 0, 0);
-            ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`; // لون ذهبي شفاف
+            ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`;
             ctx.fill();
             ctx.restore();
         }
@@ -143,32 +154,24 @@
         function animate() {
             requestAnimationFrame(animate);
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            if (Math.random() < 0.03) { // معدل ظهور القلوب
-                hearts.push(createHeart());
-            }
-
+            if (Math.random() < 0.04) hearts.push(createHeart());
             hearts.forEach((h, index) => {
                 h.y += h.speed;
                 drawHeart(h.x, h.y, h.size, h.opacity);
-                if (h.y > canvas.height) { // حذف القلوب اللي طلعت من الشاشة
-                    hearts.splice(index, 1);
-                }
+                if (h.y > canvas.height) hearts.splice(index, 1);
             });
         }
         animate();
 
-        // دالة كلمة السر وإظهار النص
         function checkPass() {
             const pass = document.getElementById('passInput').value;
-            // يمكنك تغيير "2026" لأي كلمة سر أخرى
             if(pass === "2023/1/12") {
                 document.getElementById('lock-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
                     document.getElementById('scroll-arrow').style.display = 'flex';
-                    document.getElementById('bgMusic').play(); // تشغيل الأغنية
+                    document.getElementById('bgMusic').play();
                     showText();
                 }, 1500);
             } else {
@@ -181,7 +184,7 @@
             elements.forEach((el, index) => {
                 setTimeout(() => {
                     el.classList.add('show');
-                }, index * 4000); // يظهر سطر جديد كل 3.5 ثوانٍ
+                }, index * 4000);
             });
         }
     </script>
