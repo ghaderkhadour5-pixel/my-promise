@@ -6,33 +6,87 @@
     <title>إلى الأبد</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; background: #05070a; color: white; font-family: 'Amiri', serif; }
+        
+        body, html {
+            margin: 0; padding: 0; width: 100%; height: 100%;
+            background: #05070a; color: white;
+            font-family: 'Amiri', serif;
+            /* السماح بالـ Scroll */
+            overflow-x: hidden; 
+        }
+
         #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
-        #lock-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(5, 7, 10, 0.98); display: flex; justify-content: center; align-items: center; z-index: 100; transition: 1.5s; }
-        .login-box { text-align: center; padding: 40px; border: 1px solid #d4af37; border-radius: 20px; background: rgba(255, 255, 255, 0.03); }
-        input { background: transparent; border: none; border-bottom: 2px solid #d4af37; color: white; padding: 10px; text-align: center; font-size: 1.2rem; outline: none; margin-bottom: 25px; width: 220px; }
-        button { background: #d4af37; border: none; padding: 12px 40px; color: black; font-weight: bold; border-radius: 30px; cursor: pointer; }
-        #main-content { position: relative; z-index: 1; display: none; text-align: center; padding: 20px 20px 100px 20px; }
+
+        #lock-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 7, 10, 0.98);
+            display: flex; justify-content: center; align-items: center;
+            z-index: 100; transition: 1.5s;
+        }
+
+        .login-box {
+            text-align: center; padding: 40px; border: 1px solid #d4af37;
+            border-radius: 20px; background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+        }
+
+        h2 { color: #d4af37; margin-bottom: 20px; }
+
+        input {
+            background: transparent; border: none; border-bottom: 2px solid #d4af37;
+            color: white; padding: 10px; text-align: center; font-size: 1.2rem;
+            outline: none; margin-bottom: 25px; width: 220px;
+        }
+
+        button {
+            background: #d4af37; border: none; padding: 12px 40px;
+            color: black; font-weight: bold; border-radius: 30px; 
+            cursor: pointer; font-size: 1.1rem; transition: 0.3s;
+        }
+
+        button:hover { background: #f1c40f; transform: scale(1.05); }
+
+        #main-content {
+            position: relative; z-index: 1; display: none;
+            text-align: center; padding: 20px 20px 100px 20px; /* مسافة من تحت للـ Scroll */
+        }
+
         h1 { color: #d4af37; font-size: 2.5rem; margin-top: 10vh; margin-bottom: 30px; }
         .message { font-size: 1.6rem; line-height: 2.2; max-width: 800px; margin: auto; }
-        .highlight { color: #d4af37; font-weight: bold; }
+        .highlight { color: #d4af37; font-weight: bold; text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        
         .fade-in { opacity: 0; transform: translateY(30px); transition: 2.5s; margin-bottom: 30px; }
         .show { opacity: 1; transform: translateY(0); }
-        .scroll-hint { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: none; flex-direction: column; align-items: center; color: #d4af37; font-size: 0.9rem; animation: bounce 2s infinite; }
-        @keyframes bounce { 0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);} 40% {transform: translateY(-10px) translateX(-50%);} 60% {transform: translateY(-5px) translateX(-50%);} }
+
+        /* سهم النزول */
+        .scroll-hint {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            display: none; flex-direction: column; align-items: center;
+            color: #d4af37; font-size: 0.9rem; animation: bounce 2s infinite;
+            z-index: 10;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {transform: translateY(0) translateX(-50%);}
+            40% {transform: translateY(-10px) translateX(-50%);}
+            60% {transform: translateY(-5px) translateX(-50%);}
+        }
     </style>
 </head>
 <body>
+
     <canvas id="canvas"></canvas>
+
     <div id="lock-screen">
         <div class="login-box">
-            <h2>مكانٌ لا يدخلهُ إلا أصحابهُ</h2>
+            <h2>مكانٌ لا يدخلهُ إلا أاصحابهُ</h2>
             <p>أدخلي كلمة السر التي تفتح باب ذكرياتنا</p>
             <input type="password" id="passInput" placeholder="كلمة السر...">
             <br>
             <button onclick="checkPass()">دخول</button>
         </div>
     </div>
+
     <div id="main-content">
         <h1 class="fade-in">إلى مَن اختارها قلبي..</h1>
         <div class="message">
@@ -42,81 +96,92 @@
             <p class="fade-in">طموحكِ يشبهكِ، والنجاحُ ينتظركِ لأنكِ تستحقينه..</p>
             <p class="fade-in">أنا هنا، وسأبقى هنا.. السندُ الذي لا يميل، والوطنُ الذي ينتظرُ رجوعكِ.</p>
         </div>
-        <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
-        <div id="scroll-arrow" class="scroll-hint"><span>اسحبي للأسفل</span><div style="font-size: 20px;">↓</div></div>
+        
+        <audio id="bgMusic" loop>
+            <source src="music.mp3" type="audio/mpeg">
+        </audio>
+
+        <div id="scroll-arrow" class="scroll-hint">
+            <span>اسحبي للأسفل</span>
+            <div style="font-size: 20px;">↓</div>
+        </div>
     </div>
 
     <script>
+        // نظام مطر القلوب الرومانسي
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-        let particlesArray;
-        class Particle {
-            constructor(x, y, directionX, directionY, size, color) {
-                this.x = x; this.y = y; this.directionX = directionX; this.directionY = directionY; this.size = size; this.color = color;
-            }
-            draw() {
-                ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
-                ctx.fillStyle = '#d4af37'; ctx.fill();
-            }
-            update() {
-                if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
-                if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
-                this.x += this.directionX; this.y += this.directionY; this.draw();
-            }
+
+        let hearts = [];
+
+        function createHeart() {
+            return {
+                x: Math.random() * canvas.width,
+                y: -10, // تبدأ من فوق الشاشة
+                size: Math.random() * 8 + 4, // حجم عشوائي للقلوب
+                speed: Math.random() * 1.5 + 0.5, // سرعة نزول هادية
+                opacity: Math.random() * 0.5 + 0.2 // شفافية متغيرة
+            };
         }
-        function init() {
-            particlesArray = [];
-            let numberOfParticles = (canvas.height * canvas.width) / 9000;
-            for (let i = 0; i < numberOfParticles; i++) {
-                let size = (Math.random() * 2) + 1;
-                let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
-                let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
-                let directionX = (Math.random() * 0.5) - 0.25;
-                let directionY = (Math.random() * 0.5) - 0.25;
-                particlesArray.push(new Particle(x, y, directionX, directionY, size, '#d4af37'));
-            }
+
+        // دالة رسم القلب (كود رياضي بسيط لرسم شكل قلب)
+        function drawHeart(x, y, size, opacity) {
+            ctx.save();
+            ctx.beginPath();
+            ctx.translate(x, y);
+            ctx.scale(size / 10, size / 10);
+            ctx.moveTo(0, 0);
+            ctx.bezierCurveTo(5, -5, 10, 0, 0, 10);
+            ctx.bezierCurveTo(-10, 0, -5, -5, 0, 0);
+            ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`; // لون ذهبي شفاف
+            ctx.fill();
+            ctx.restore();
         }
+
         function animate() {
             requestAnimationFrame(animate);
-            ctx.clearRect(0, 0, innerWidth, innerHeight);
-            for (let i = 0; i < particlesArray.length; i++) particlesArray[i].update();
-            connect();
-        }
-        function connect() {
-            let opacityValue = 1;
-            for (let a = 0; a < particlesArray.length; a++) {
-                for (let b = a; b < particlesArray.length; b++) {
-                    let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
-                    if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-                        opacityValue = 1 - (distance / 20000);
-                        ctx.strokeStyle = 'rgba(212, 175, 55,' + opacityValue + ')';
-                        ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(particlesArray[a].x, particlesArray[a].y); ctx.lineTo(particlesArray[b].x, particlesArray[b].y); ctx.stroke();
-                    }
-                }
-            }
-        }
-        init(); animate();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+            if (Math.random() < 0.03) { // معدل ظهور القلوب
+                hearts.push(createHeart());
+            }
+
+            hearts.forEach((h, index) => {
+                h.y += h.speed;
+                drawHeart(h.x, h.y, h.size, h.opacity);
+                if (h.y > canvas.height) { // حذف القلوب اللي طلعت من الشاشة
+                    hearts.splice(index, 1);
+                }
+            });
+        }
+        animate();
+
+        // دالة كلمة السر وإظهار النص
         function checkPass() {
             const pass = document.getElementById('passInput').value;
-            // غيّر الرقم 2026 إذا رغبت بكلمة سر مختلفة
+            // يمكنك تغيير "2026" لأي كلمة سر أخرى
             if(pass === "2023/1/12") {
                 document.getElementById('lock-screen').style.opacity = '0';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
                     document.getElementById('scroll-arrow').style.display = 'flex';
-                    document.getElementById('bgMusic').play();
+                    document.getElementById('bgMusic').play(); // تشغيل الأغنية
                     showText();
                 }, 1500);
-            } else { alert("كلمة سر خاطئة.. حاولي مجدداً بقلبك."); }
+            } else {
+                alert("كلمة سر خاطئة.. حاولي مجدداً بقلبك.");
+            }
         }
+
         function showText() {
             const elements = document.querySelectorAll('.fade-in');
             elements.forEach((el, index) => {
-                setTimeout(() => { el.classList.add('show'); }, index * 4000);
+                setTimeout(() => {
+                    el.classList.add('show');
+                }, index * 4000); // يظهر سطر جديد كل 3.5 ثوانٍ
             });
         }
     </script>
