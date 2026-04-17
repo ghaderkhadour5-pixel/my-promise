@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إلى الأبد</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+        
+        body {
+            margin: 0;
+            background: #05070a; /* أسود ليلي عميق */
+            color: #e0e0e0;
+            font-family: 'Amiri', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            text-align: center;
+        }
+
+        /* تأثير النجوم المتحركة */
+        #stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+        }
+
+        .content {
+            z-index: 1;
+            padding: 30px;
+            max-width: 800px;
+        }
+
+        h1 {
+            color: #d4af37; /* ذهبي ملكي */
+            font-size: 2.8rem;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: fadeIn 3s forwards;
+        }
+
+        .message {
+            font-size: 1.8rem;
+            line-height: 2;
+            opacity: 0;
+            animation: fadeIn 4s forwards 2s;
+        }
+
+        .highlight {
+            color: #d4af37;
+            font-weight: bold;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* لمسة تقنية: زر تشغيل الموسيقى ليظهر برقي */
+        .music-player {
+            margin-top: 40px;
+            opacity: 0;
+            animation: fadeIn 3s forwards 5s;
+        }
+    </style>
+</head>
+<body>
+    <div id="stars-container"></div>
+    
+    <div class="content">
+        <h1>إلى مَن اختارها قلبي..</h1>
+        <div class="message">
+            سنتانِ مَضتا.. واليقينُ بداخلي لا يَهتز. <br>
+            سافِري، انجحي، وكوني كما حلمتِ دائماً.. <br>
+            لكن تذكري أن <span class="highlight">"النصيب"</span> لا يخطئ العناوين يوماً. <br>
+            أنا هُنا، وسأبقى هُنا.. <br>
+            بانتظار اللحظة التي نعودُ فيها <span class="highlight">"معاً"</span>.
+        </div>
+
+        <div class="music-player">
+            <audio id="bgMusic" controls autoplay loop>
+                <source src="رابط_الأغنية_المباشر.mp3" type="audio/mpeg">
+                متصفحك لا يدعم الصوت.
+            </audio>
+        </div>
+    </div>
+</body>
+</html>
