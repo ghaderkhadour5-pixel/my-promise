@@ -5,142 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Until We Meet Again</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Playfair+Display:ital,wght@1,600&display=swap');
         
         body, html {
             margin: 0; padding: 0; width: 100%; height: 100%;
-            background: #020406; color: white;
+            background-color: #030508; color: #e0e0e0;
             font-family: 'Amiri', serif;
-            scroll-behavior: smooth;
-            overflow-x: hidden;
+            scroll-behavior: smooth; overflow-x: hidden;
         }
 
-        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
+        #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* اسم "فرح" الاحترافي - مع تأثير التوهج الناعم */
-        .name-watermark {
+        /* تعديل اسم "فرح" ليكون واضحاً وبارزاً */
+        .name-background {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 20vw; 
-            color: rgba(212, 175, 55, 0.08); 
-            z-index: 0; user-select: none; pointer-events: none;
-            white-space: nowrap; font-weight: bold;
-            filter: blur(2px); /* لمسة احترافية */
-            transition: transform 0.2s ease-out;
+            font-size: 22vw; font-weight: 700;
+            color: rgba(212, 175, 55, 0.2); /* رفع الوضوح ليكون ظاهراً بوضوح */
+            z-index: 0; user-select: none;
+            text-transform: uppercase; letter-spacing: 15px;
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.1); /* توهج خفيف ليعطي فخامة */
         }
 
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, #0a0e14 0%, #020406 100%);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 100; transition: 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #030508; display: flex; justify-content: center; align-items: center;
+            z-index: 100; transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
         }
 
         .login-box {
-            text-align: center; padding: 50px; border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 20px; background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+            text-align: center; border: 1px solid rgba(212, 175, 55, 0.4);
+            padding: 60px 40px; border-radius: 4px;
+            background: rgba(212, 175, 55, 0.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
         }
+
+        .login-box h2 { color: #d4af37; font-size: 1.8rem; letter-spacing: 2px; margin-bottom: 30px; }
 
         input {
-            background: transparent; border: none; border-bottom: 2px solid #d4af37;
-            color: white; padding: 10px; text-align: center; font-size: 1.3rem;
-            outline: none; margin-bottom: 30px; width: 250px; transition: 0.3s;
+            background: transparent; border: none; border-bottom: 1px solid #d4af37;
+            color: #d4af37; padding: 12px; text-align: center; font-size: 1.4rem;
+            outline: none; width: 200px; transition: 0.4s; margin-bottom: 40px;
         }
-        input:focus { width: 280px; border-bottom-color: #f1c40f; }
 
         button {
-            background: linear-gradient(45deg, #d4af37, #f1c40f); border: none; 
-            padding: 14px 50px; color: black; font-weight: bold; 
-            border-radius: 30px; cursor: pointer; font-size: 1.1rem;
-            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3); transition: 0.3s;
+            background: transparent; border: 1px solid #d4af37; padding: 12px 50px;
+            color: #d4af37; font-size: 1rem; cursor: pointer;
+            transition: 0.5s; letter-spacing: 2px;
         }
-        button:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(212, 175, 55, 0.5); }
+        button:hover { background: #d4af37; color: black; }
 
-        #main-content {
-            position: relative; z-index: 1; display: none;
-            text-align: center; padding: 40px 20px 150px 20px; 
+        #main-content { position: relative; z-index: 1; display: none; text-align: center; padding-bottom: 150px; }
+
+        h1 { 
+            color: #d4af37; font-size: 3.5rem; margin-top: 15vh; opacity: 0;
+            transform: translateY(20px); transition: 2s ease;
         }
 
-        h1 { color: #d4af37; font-size: 3rem; margin-top: 15vh; opacity: 0; }
+        .message { max-width: 900px; margin: 100px auto; padding: 0 20px; }
+
         .message p { 
-            font-size: 1.8rem; line-height: 2.5; max-width: 850px; 
-            margin: 40px auto; opacity: 0; transform: translateY(20px);
-            transition: all 1.5s ease;
+            font-size: 1.9rem; line-height: 2.4; margin-bottom: 80px; 
+            opacity: 0; transform: translateY(30px); transition: 2s ease;
         }
-        .message p.show { opacity: 1; transform: translateY(0); }
 
-        .highlight { color: #d4af37; text-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        .highlight { color: #d4af37; font-weight: bold; border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
 
         .final-promise {
-            margin-top: 100px; border-top: 1px solid rgba(212, 175, 55, 0.2);
-            padding-top: 50px; color: #d4af37;
+            margin-top: 150px; padding: 80px 20px;
+            background: rgba(212, 175, 55, 0.03);
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
         }
 
-        .scroll-hint {
+        .english-quote { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-style: italic; color: #d4af37; margin-bottom: 20px; }
+        .arabic-promise { font-size: 2.2rem; font-weight: bold; margin-bottom: 30px; }
+        .until-again { letter-spacing: 8px; font-weight: bold; color: rgba(212, 175, 55, 0.8); }
+
+        .show { opacity: 1 !important; transform: translateY(0) !important; }
+
+        .scroll-indicator {
             position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            display: none; flex-direction: column; align-items: center;
-            color: rgba(212, 175, 55, 0.6); font-size: 0.9rem;
+            display: none; color: #d4af37; font-size: 0.8rem; letter-spacing: 4px;
         }
     </style>
 </head>
 <body>
 
     <canvas id="canvas"></canvas>
-    <div class="name-watermark" id="parallaxName">فرح</div>
+    <div class="name-background">فرح</div>
 
     <div id="lock-screen">
         <div class="login-box">
-            <h2 style="color:#d4af37; letter-spacing: 2px;">مساحة خاصة</h2>
-            <p style="margin-bottom: 30px; color: #aaa;">هل أنتِ مستعدة لما ينتظركِ بالداخل؟</p>
-            <input type="password" id="passInput" placeholder="كلمة السر">
+            <h2>PRIVATE ACCESS</h2>
+            <p style="color: #888; font-size: 0.9rem; margin-bottom: 30px;">هل أنتِ مستعدة لما ينتظركِ بالداخل؟</p>
+            <input type="password" id="passInput" placeholder="Password">
             <br>
             <button onclick="checkPass()">اكتشفي السر</button>
         </div>
     </div>
 
     <div id="main-content">
-        <h1 id="mainTitle">إلى مَن اختارها قلبي..</h1>
-        <div class="message" id="msgContainer">
-            <p>منذُ أول يومٍ التقيتُكِ بهِ أحببتُكِ، وإلى الآن قلبي لكِ فقط.</p>
-            <p>سافري، حققي أحلامكِ، وافتحي للعالمِ أبواباً جديدة..</p>
-            <p>تذكري دائماً أنكِ <span class="highlight">أنتِ الأفضل وأنتِ الأجمل</span> بعيوني وبعيون الكل.</p>
-            <p>الأيام الجاية يمكن تكون صعبة بالبداية، بس تذكري إنو غدير عم يدعيلك بكل ثانية.</p>
-            <p>بدي إياكِ تواجهي العالم بقلب قوي، وتذكري دايماً إنو في قلب ناطرك وعيون ما بتتمنى تشوفك إلا بالقمة.</p>
-            <p>طموحكِ يشبهكِ، والنجاحُ ينتظركِ لأنكِ تستحقينه..</p>
-            <p>أنا هنا، وسأبقى هنا.. السندُ الذي لا يميل، والوطنُ الذي ينتظرُ رجوعكِ.</p>
+        <h1 id="title">إلى مَن اختارها قلبي..</h1>
+        <div class="message">
+            <p class="fade-el">منذُ أول يومٍ التقيتُكِ بهِ أحببتُكِ، وإلى الآن قلبي لكِ فقط.</p>
+            <p class="fade-el">سافري، حققي أحلامكِ، وافتحي للعالمِ أبواباً جديدة..</p>
+            <p class="fade-el">تذكري دائماً أنكِ <span class="highlight">أنتِ الأفضل وأنتِ الأجمل</span> بعيوني وبعيون الكل.</p>
+            <p class="fade-el">الأيام الجاية يمكن تكون صعبة بالبداية، بس تذكري إنو غدير عم يدعيلك بكل ثانية.</p>
+            <p class="fade-el">بدي إياكِ تواجهي العالم بقلب قوي، وتذكري دايماً إنو في قلب ناطرك وعيون ما بتتمنى تشوفك إلا بالقمة.</p>
+            <p class="fade-el">طموحكِ يشبهكِ، والنجاحُ ينتظركِ لأنكِ تستحقينه..</p>
+            <p class="fade-el">أنا هنا، وسأبقى هنا.. السندُ الذي لا يميل، والوطنُ الذي ينتظرُ رجوعكِ.</p>
 
-            <div class="final-promise">
-                <p style="font-size: 1.5rem; font-style: italic;">"Every road I take leads me back to the moment we meet again."</p>
-                <p style="font-size: 2rem; font-weight: bold;">ليست وداعاً.. بل هي الخطوة الأولى نحو لقاءٍ لا ينتهي.</p>
-                <p style="letter-spacing: 5px; margin-top: 20px; font-weight: bold;">Until we meet again..</p>
+            <div class="final-promise fade-el">
+                <div class="english-quote">"Every road I take leads me back to the moment we meet again."</div>
+                <div class="arabic-promise">ليست وداعاً.. بل هي الخطوة الأولى نحو لقاءٍ لا ينتهي.</div>
+                <div class="until-again">UNTIL WE MEET AGAIN</div>
             </div>
         </div>
-
+        
         <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
-
-        <div id="scroll-arrow" class="scroll-hint">
-            <span>اسحبي ببطء للأسفل</span>
-            <div style="font-size: 25px; animation: bounce 2s infinite;">↓</div>
-        </div>
+        <div id="scroll-hint" class="scroll-indicator">SCROLL DOWN</div>
     </div>
 
     <script>
-        // تأثير البارالكس لاسم فرح
-        document.addEventListener('mousemove', (e) => {
-            const moveX = (e.clientX - window.innerWidth / 2) * 0.02;
-            const moveY = (e.clientY - window.innerHeight / 2) * 0.02;
-            document.getElementById('parallaxName').style.transform = `translate(calc(-50% + ${moveX}px), calc(-50% + ${moveY}px))`;
-        });
-
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         let hearts = [];
 
         function createHeart() {
-            return { x: Math.random() * canvas.width, y: -20, size: Math.random() * 8 + 5, speed: Math.random() * 1 + 0.5, opacity: Math.random() * 0.5 + 0.2 };
+            return { x: Math.random() * canvas.width, y: -20, size: Math.random() * 6 + 4, speed: Math.random() * 0.8 + 0.4, opacity: Math.random() * 0.4 + 0.1 };
         }
 
         function drawHeart(x, y, size, opacity) {
@@ -164,30 +158,25 @@
             const pass = document.getElementById('passInput').value;
             if(pass === "2023/1/12") {
                 const lock = document.getElementById('lock-screen');
-                lock.style.transform = 'translateY(-100%)'; // حركة خروج احترافية للأعلى
+                lock.style.transform = 'translateX(-100%)';
                 setTimeout(() => {
                     lock.style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
-                    document.getElementById('scroll-arrow').style.display = 'flex';
-                    const audio = document.getElementById('bgMusic');
-                    audio.volume = 0.5; audio.play();
-                    showTextSequential();
-                }, 1000);
-            } else { alert("كلمة السر موجودة بقلبك.. حاولي مرة ثانية."); }
+                    document.getElementById('scroll-hint').style.display = 'block';
+                    document.getElementById('bgMusic').play();
+                    revealElements();
+                }, 1200);
+            } else { alert("Access Denied."); }
         }
 
-        function showTextSequential() {
-            const title = document.getElementById('mainTitle');
-            title.style.transition = "opacity 3s";
-            title.style.opacity = "1";
-
-            const paragraphs = document.querySelectorAll('.message p, .final-promise');
-            paragraphs.forEach((p, index) => {
-                setTimeout(() => {
-                    p.classList.add('show');
-                }, (index + 1) * 3500); // ظهور متسلسل بفاصل زمن مريح للقراءة
+        function revealElements() {
+            document.getElementById('title').classList.add('show');
+            const elements = document.querySelectorAll('.fade-el');
+            elements.forEach((el, index) => {
+                setTimeout(() => { el.classList.add('show'); }, (index + 1) * 3500);
             });
         }
     </script>
 </body>
-</html>
+            </html>
+            
