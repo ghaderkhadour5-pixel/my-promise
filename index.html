@@ -16,17 +16,18 @@
 
         #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
-        /* تعديل اسم "فرح" ليكون واضحاً وبارزاً */
+        /* اسم "فرح" بتصميم فخم ووضوح 20% ليكون سيد المشهد بالخلفية */
         .name-background {
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-size: 22vw; font-weight: 700;
-            color: rgba(212, 175, 55, 0.2); /* رفع الوضوح ليكون ظاهراً بوضوح */
+            color: rgba(212, 175, 55, 0.2); 
             z-index: 0; user-select: none;
             text-transform: uppercase; letter-spacing: 15px;
-            text-shadow: 0 0 20px rgba(212, 175, 55, 0.1); /* توهج خفيف ليعطي فخامة */
+            text-shadow: 0 0 20px rgba(212, 175, 55, 0.1);
         }
 
+        /* شاشة القفل - تصميم Dark Premium */
         #lock-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #030508; display: flex; justify-content: center; align-items: center;
@@ -55,6 +56,7 @@
         }
         button:hover { background: #d4af37; color: black; }
 
+        /* المحتوى الأساسي */
         #main-content { position: relative; z-index: 1; display: none; text-align: center; padding-bottom: 150px; }
 
         h1 { 
@@ -71,6 +73,7 @@
 
         .highlight { color: #d4af37; font-weight: bold; border-bottom: 1px solid rgba(212, 175, 55, 0.3); }
 
+        /* قفلة الوعد النهائية */
         .final-promise {
             margin-top: 150px; padding: 80px 20px;
             background: rgba(212, 175, 55, 0.03);
@@ -81,6 +84,21 @@
         .english-quote { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-style: italic; color: #d4af37; margin-bottom: 20px; }
         .arabic-promise { font-size: 2.2rem; font-weight: bold; margin-bottom: 30px; }
         .until-again { letter-spacing: 8px; font-weight: bold; color: rgba(212, 175, 55, 0.8); }
+
+        /* صندوق الرسائل السري */
+        .contact-box {
+            margin-top: 80px; padding: 40px; 
+            border: 1px dashed rgba(212, 175, 55, 0.4); 
+            background: rgba(255,255,255,0.01);
+            max-width: 600px; margin-left: auto; margin-right: auto;
+        }
+
+        textarea {
+            width: 100%; height: 120px; background: rgba(255,255,255,0.05); 
+            border: 1px solid rgba(212, 175, 55, 0.2); color: white; 
+            padding: 15px; font-family: 'Amiri', serif; font-size: 1.2rem; 
+            outline: none; resize: none; margin-top: 15px; box-sizing: border-box;
+        }
 
         .show { opacity: 1 !important; transform: translateY(0) !important; }
 
@@ -120,6 +138,14 @@
                 <div class="english-quote">"Every road I take leads me back to the moment we meet again."</div>
                 <div class="arabic-promise">ليست وداعاً.. بل هي الخطوة الأولى نحو لقاءٍ لا ينتهي.</div>
                 <div class="until-again">UNTIL WE MEET AGAIN</div>
+            </div>
+
+            <div class="contact-box fade-el">
+                <p style="font-size: 1.3rem; color: #d4af37;">If you have something to say, please go ahead.. I'm listening.</p>
+                <textarea id="userMsg" placeholder="اكتبي رسالتكِ هنا..."></textarea>
+                <br>
+                <button onclick="sendToTelegram()" style="margin-top: 20px; padding: 10px 40px; font-size: 0.9rem;">إرسال</button>
+                <p id="sentStatus" style="display:none; font-size: 1rem; color: #2ecc71; margin-top: 15px;">وصلت رسالتكِ لغدير..</p>
             </div>
         </div>
         
@@ -176,7 +202,27 @@
                 setTimeout(() => { el.classList.add('show'); }, (index + 1) * 3500);
             });
         }
+
+        function sendToTelegram() {
+            const msg = document.getElementById('userMsg').value;
+            const status = document.getElementById('sentStatus');
+            if(!msg) { alert("اكتبي شيئاً أولاً.."); return; }
+
+            // --- هام: ضع معلوماتك هنا ---
+            const token = "8609675829:AAFZl-G6hL9yX28qqMKYO-GU4mit5f9z7Xs"; 
+            const chatId = "5225706397"; 
+            // ---------------------------
+
+            const text = `رسالة من فرح:\n\n${msg}`;
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(text)}`;
+            
+            fetch(url).then(response => {
+                if(response.ok) {
+                    status.style.display = "block";
+                    document.getElementById('userMsg').value = "";
+                } else { alert("حدث خطأ في الإرسال."); }
+            });
+        }
     </script>
 </body>
-            </html>
-            
+</html>
