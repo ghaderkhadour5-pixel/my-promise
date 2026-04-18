@@ -83,13 +83,20 @@
             border: 1px solid rgba(212, 175, 55, 0.2); color: white;
             padding: 12px; font-family: 'Amiri', serif; font-size: 1.2rem;
             outline: none; resize: none; box-sizing: border-box;
+            transition: 0.3s;
         }
+        textarea:focus { border-color: #d4af37; background: rgba(255,255,255,0.08); }
 
         .show { opacity: 1 !important; transform: translateY(0) !important; }
 
         .scroll-indicator {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: none; color: #d4af37; font-size: 0.8rem; letter-spacing: 3px;
+        }
+
+        #sentStatus {
+            transition: 0.5s; opacity: 0; transform: translateY(10px);
+            color: #d4af37; margin-top: 15px; font-weight: bold;
         }
     </style>
 </head>
@@ -131,8 +138,8 @@
                 <p style="font-size: 1.3rem; color: #d4af37; margin-bottom: 15px; font-style: italic;">If you have something to say, please go ahead..</p>
                 <textarea id="userMsg" placeholder="اكتبي رسالتكِ هنا..."></textarea>
                 <br>
-                <button onclick="sendToTelegram(event)" style="margin-top: 15px;">إرسال الرسالة</button>
-                <p id="sentStatus" style="display:none; color: #d4af37; margin-top: 15px; font-weight: bold;">وصلت رسالتكِ لغدير..</p>
+                <button id="sendBtn" onclick="sendToTelegram(event)" style="margin-top: 15px;">إرسال الرسالة</button>
+                <p id="sentStatus">وصلت رسالتكِ 🤍</p>
             </div>
         </div>
         
@@ -141,11 +148,9 @@
     </div>
 
     <script>
-        // --- إعدادات البوت والتحكم (عدل هنا فقط) ---
         const BOT_TOKEN = "8609675829:AAFZl-G6hL9yX28qqMKYO-GU4mit5f9z7Xs";
         const CHAT_ID = "5225706397";
         const PASSWORD_VAL = "2023/1/12"; 
-        // ------------------------------------------
 
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
@@ -176,7 +181,6 @@
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             if(pass === PASSWORD_VAL) {
-                // إرسال إشعار دخول فور النجاح
                 const loginNotify = encodeURIComponent("بشرى يا غدير.. فرح دخلت الموقع الآن 🤍");
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${loginNotify}`);
 
@@ -200,25 +204,49 @@
             });
         }
 
+        // --- تعديل الإرسال ليصبح AJAX ثابت ---
         function sendToTelegram(e) {
-            const msg = document.getElementById('userMsg').value;
-            if(!msg) return;
-            const btn = e.target;
-            btn.disabled = true; btn.innerText = "...";
+            const msgInput = document.getElementById('userMsg');
+            const status = document.getElementById('sentStatus');
+            const btn = document.getElementById('sendBtn');
+            const msgText = msgInput.value;
 
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('رسالة من فرح:\n' + msg)}`;
+            if(!msgText.trim()) return;
+
+            // تأثير جاري الإرسال
+            btn.disabled = true; 
+            btn.innerText = "جاري الإرسال...";
+
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('رسالة من فرح:\n' + msgText)}`;
             
-            fetch(url).then(res => {
+            fetch(url)
+            .then(res => {
                 if(res.ok) {
-                    document.getElementById('sentStatus').style.display = "block";
-                    document.getElementById('userMsg').style.display = "none";
-                    btn.style.display = "none";
+                    // تفريغ الحقل فوراً وبقاؤه ثابتاً
+                    msgInput.value = "";
+                    
+                    // إظهار تنبيه النجاح بحركة أنيقة
+                    status.style.opacity = "1";
+                    status.style.transform = "translateY(0)";
+                    
+                    // إعادة الزر بعد ثانية ونصف وإخفاء التنبيه
+                    setTimeout(() => {
+                        status.style.opacity = "0";
+                        status.style.transform = "translateY(10px)";
+                        btn.disabled = false;
+                        btn.innerText = "إرسال الرسالة";
+                    }, 3000);
                 } else {
-                    btn.disabled = false; btn.innerText = "إعادة المحاولة";
+                    alert("عذراً، حدث خطأ بالشبكة.");
+                    btn.disabled = false; 
+                    btn.innerText = "إعادة المحاولة";
                 }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerText = "إعادة المحاولة";
             });
         }
     </script>
 </body>
-                    </html>
-                    
+</html>
