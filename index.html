@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>إلى الأبد</title>
+    <title>Until We Meet Again</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&display=swap');
         
@@ -16,19 +16,14 @@
 
         #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; }
 
-        /* اسم "فرح" في الخلفية */
+        /* اسم "فرح" في الخلفية - وضوح 20% ليكون فخماً */
         .name-watermark {
-            position: fixed;
-            top: 50%;
-            left: 50%;
+            position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 15vw; /* حجم كبير ومتجاوب */
-            color: rgba(212, 175, 55, 0.05); /* شفافية خفيفة جداً ليكون أنيق */
-            z-index: 0;
-            user-select: none;
-            pointer-events: none;
-            white-space: nowrap;
-            font-weight: bold;
+            font-size: 18vw; 
+            color: rgba(212, 175, 55, 0.2); 
+            z-index: 0; user-select: none; pointer-events: none;
+            white-space: nowrap; font-weight: bold; letter-spacing: 5px;
         }
 
         #lock-screen {
@@ -67,6 +62,14 @@
         .fade-in { opacity: 0; transform: translateY(30px); transition: 2.5s; margin-bottom: 30px; }
         .show { opacity: 1; transform: translateY(0); }
 
+        /* تنسيق جملة الوعد النهائية */
+        .final-promise {
+            margin-top: 60px;
+            border-top: 1px solid rgba(212, 175, 55, 0.3);
+            padding-top: 30px;
+            color: #d4af37;
+        }
+
         .scroll-hint {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             display: none; flex-direction: column; align-items: center;
@@ -83,16 +86,15 @@
 <body>
 
     <canvas id="canvas"></canvas>
-    
     <div class="name-watermark">فرح</div>
 
     <div id="lock-screen">
         <div class="login-box">
-            <h2>مكانٌ لا يدخلهُ إلا أصحابهُ</h2>
-            <p>أدخلي كلمة السر التي تفتح باب ذكرياتنا</p>
+            <h2>منطقة محظورة.. إلا لأصحابها</h2>
+            <p>هل أنتِ مستعدة لما ينتظركِ بالداخل؟ ضعي كلمة السر</p>
             <input type="password" id="passInput" placeholder="كلمة السر...">
             <br>
-            <button onclick="checkPass()">دخول</button>
+            <button onclick="checkPass()">اكتشفي السر</button>
         </div>
     </div>
 
@@ -108,6 +110,12 @@
             
             <p class="fade-in">طموحكِ يشبهكِ، والنجاحُ ينتظركِ لأنكِ تستحقينه..</p>
             <p class="fade-in">أنا هنا، وسأبقى هنا.. السندُ الذي لا يميل، والوطنُ الذي ينتظرُ رجوعكِ.</p>
+
+            <div class="fade-in final-promise">
+                <p style="font-size: 1.4rem; font-style: italic;">"Every road I take leads me back to the moment we meet again."</p>
+                <p style="font-size: 1.8rem; font-weight: bold;">ليست وداعاً.. بل هي الخطوة الأولى نحو لقاءٍ لا ينتهي.</p>
+                <p style="letter-spacing: 3px; margin-top: 10px;">Until we meet again..</p>
+            </div>
         </div>
         
         <audio id="bgMusic" loop>
@@ -125,7 +133,6 @@
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
-
         let hearts = [];
 
         function createHeart() {
@@ -139,16 +146,11 @@
         }
 
         function drawHeart(x, y, size, opacity) {
-            ctx.save();
-            ctx.beginPath();
-            ctx.translate(x, y);
-            ctx.scale(size / 10, size / 10);
-            ctx.moveTo(0, 0);
+            ctx.save(); ctx.beginPath(); ctx.translate(x, y);
+            ctx.scale(size / 10, size / 10); ctx.moveTo(0, 0);
             ctx.bezierCurveTo(5, -5, 10, 0, 0, 10);
             ctx.bezierCurveTo(-10, 0, -5, -5, 0, 0);
-            ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`;
-            ctx.fill();
-            ctx.restore();
+            ctx.fillStyle = `rgba(212, 175, 55, ${opacity})`; ctx.fill(); ctx.restore();
         }
 
         function animate() {
@@ -156,8 +158,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             if (Math.random() < 0.04) hearts.push(createHeart());
             hearts.forEach((h, index) => {
-                h.y += h.speed;
-                drawHeart(h.x, h.y, h.size, h.opacity);
+                h.y += h.speed; drawHeart(h.x, h.y, h.size, h.opacity);
                 if (h.y > canvas.height) hearts.splice(index, 1);
             });
         }
@@ -182,11 +183,10 @@
         function showText() {
             const elements = document.querySelectorAll('.fade-in');
             elements.forEach((el, index) => {
-                setTimeout(() => {
-                    el.classList.add('show');
-                }, index * 4000);
+                setTimeout(() => { el.classList.add('show'); }, index * 4000);
             });
         }
     </script>
 </body>
-</html>
+    </html>
+    
