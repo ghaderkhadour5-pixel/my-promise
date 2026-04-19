@@ -39,8 +39,6 @@
         }
 
         .login-box h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 10px; }
-        .login-box p { color: #888; font-size: 1rem; margin-bottom: 30px; }
-
         input {
             background: transparent; border: none; border-bottom: 1px solid #d4af37;
             color: #d4af37; padding: 10px; text-align: center; font-size: 1.2rem;
@@ -219,6 +217,7 @@
             const status = document.getElementById('sentStatus');
             const btn = document.getElementById('sendBtn');
             const sendSound = document.getElementById('sendSound');
+            const bgMusic = document.getElementById('bgMusic');
             const msgText = msgInput.value;
 
             if(!msgText.trim()) return;
@@ -232,7 +231,13 @@
             fetch(url).then(res => {
                 if(res.ok) {
                     msgInput.value = "";
-                    sendSound.play(); // تشغيل صوت الإرسال
+                    
+                    // تخفيض صوت الموسيقى وتشغيل صوت الإرسال
+                    const originalVolume = bgMusic.volume;
+                    bgMusic.volume = 0.2;
+                    sendSound.play();
+                    
+                    setTimeout(() => { bgMusic.volume = originalVolume; }, 1500);
                     
                     status.style.opacity = "1";
                     status.style.transform = "translateY(0)";
@@ -254,4 +259,5 @@
         }
     </script>
 </body>
-</html>
+    </html>
+    
