@@ -181,7 +181,7 @@
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             if(pass === PASSWORD_VAL) {
-                const loginNotify = encodeURIComponent("بشرى يا غدير.. فرح دخلت الموقع الآن 🤍");
+                const loginNotify = encodeURIComponent(" فرح دخلت الموقع الآن");
                 fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${loginNotify}`);
 
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
