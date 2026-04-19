@@ -98,6 +98,14 @@
             transition: 0.5s; opacity: 0; transform: translateY(10px);
             color: #d4af37; margin-top: 15px; font-weight: bold;
         }
+
+        /* تأثير النبضة الذهبية للزر */
+        @keyframes goldPulse {
+            0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0); }
+        }
+        .sending-pulse { animation: goldPulse 1s infinite; }
     </style>
 </head>
 <body>
@@ -144,6 +152,8 @@
         </div>
         
         <audio id="bgMusic" loop><source src="music.mp3" type="audio/mpeg"></audio>
+        <audio id="sendSound"><source src="send.mp3" type="audio/mpeg"></audio>
+        
         <div id="scroll-hint" class="scroll-indicator">اسحبي للأسفل</div>
     </div>
 
@@ -204,47 +214,42 @@
             });
         }
 
-        // --- تعديل الإرسال ليصبح AJAX ثابت ---
         function sendToTelegram(e) {
             const msgInput = document.getElementById('userMsg');
             const status = document.getElementById('sentStatus');
             const btn = document.getElementById('sendBtn');
+            const sendSound = document.getElementById('sendSound');
             const msgText = msgInput.value;
 
             if(!msgText.trim()) return;
 
-            // تأثير جاري الإرسال
             btn.disabled = true; 
             btn.innerText = "جاري الإرسال...";
+            btn.classList.add('sending-pulse');
 
             const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('رسالة من فرح:\n' + msgText)}`;
             
-            fetch(url)
-            .then(res => {
+            fetch(url).then(res => {
                 if(res.ok) {
-                    // تفريغ الحقل فوراً وبقاؤه ثابتاً
                     msgInput.value = "";
+                    sendSound.play(); // تشغيل صوت الإرسال
                     
-                    // إظهار تنبيه النجاح بحركة أنيقة
                     status.style.opacity = "1";
                     status.style.transform = "translateY(0)";
                     
-                    // إعادة الزر بعد ثانية ونصف وإخفاء التنبيه
                     setTimeout(() => {
                         status.style.opacity = "0";
                         status.style.transform = "translateY(10px)";
                         btn.disabled = false;
                         btn.innerText = "إرسال الرسالة";
+                        btn.classList.remove('sending-pulse');
                     }, 3000);
                 } else {
                     alert("عذراً، حدث خطأ بالشبكة.");
                     btn.disabled = false; 
                     btn.innerText = "إعادة المحاولة";
+                    btn.classList.remove('sending-pulse');
                 }
-            })
-            .catch(err => {
-                btn.disabled = false;
-                btn.innerText = "إعادة المحاولة";
             });
         }
     </script>
