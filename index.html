@@ -12,7 +12,6 @@
             background-color: #030508; color: #e0e0e0;
             font-family: 'Amiri', serif;
             scroll-behavior: smooth; overflow-x: hidden;
-            user-select: none; /* لمنع النسخ وللحفاظ على خصوصية الكلام */
         }
 
         #canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
@@ -21,7 +20,7 @@
             position: fixed; top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-size: 25vw; font-weight: 700;
-            color: rgba(212, 175, 55, 0.1); 
+            color: rgba(212, 175, 55, 0.15); 
             z-index: 0; user-select: none;
             text-transform: uppercase; letter-spacing: 5px;
         }
@@ -40,7 +39,6 @@
         }
 
         .login-box h2 { color: #d4af37; font-size: 1.8rem; margin-bottom: 10px; }
-        
         input {
             background: transparent; border: none; border-bottom: 1px solid #d4af37;
             color: #d4af37; padding: 10px; text-align: center; font-size: 1.2rem;
@@ -53,16 +51,6 @@
             font-family: 'Amiri', serif;
         }
         button:hover { background: #d4af37; color: black; }
-
-        /* زر التحكم بالموسيقى */
-        .music-control {
-            position: fixed; top: 20px; left: 20px; z-index: 1000;
-            background: rgba(212, 175, 55, 0.05); border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 50%; width: 45px; height: 45px;
-            display: none; justify-content: center; align-items: center;
-            cursor: pointer; color: #d4af37; transition: 0.3s; font-size: 1.2rem;
-        }
-        .music-control:hover { background: rgba(212, 175, 55, 0.15); transform: scale(1.1); }
 
         #main-content { position: relative; z-index: 1; display: none; text-align: center; padding-bottom: 50px; }
 
@@ -92,7 +80,8 @@
             width: 100%; height: 110px; background: rgba(255,255,255,0.05);
             border: 1px solid rgba(212, 175, 55, 0.2); color: white;
             padding: 12px; font-family: 'Amiri', serif; font-size: 1.2rem;
-            outline: none; resize: none; box-sizing: border-box; transition: 0.3s;
+            outline: none; resize: none; box-sizing: border-box;
+            transition: 0.3s;
         }
         textarea:focus { border-color: #d4af37; background: rgba(255,255,255,0.08); }
 
@@ -108,6 +97,7 @@
             color: #d4af37; margin-top: 15px; font-weight: bold;
         }
 
+        /* تأثير النبضة الذهبية للزر */
         @keyframes goldPulse {
             0% { box-shadow: 0 0 0 0 rgba(212, 175, 55, 0.7); }
             70% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
@@ -120,10 +110,6 @@
 
     <canvas id="canvas"></canvas>
     <div class="name-background">فرح</div>
-
-    <div id="musicBtn" class="music-control" onclick="toggleMusic()">
-        <span id="musicIcon">🔊</span>
-    </div>
 
     <div id="lock-screen">
         <div class="login-box">
@@ -170,9 +156,8 @@
     </div>
 
     <script>
-        // --- تعديل المعلومات هنا ---
-        const BOT_TOKEN = "8609675829:AAFZl-G6hL9yX28qqMKYO-GU4mit5f9z7Xs"; // سطر 136
-        const CHAT_ID = "5225706397"; // سطر 137
+        const BOT_TOKEN = "8609675829:AAFZl-G6hL9yX28qqMKYO-GU4mit5f9z7Xs";
+        const CHAT_ID = "5225706397";
         const PASSWORD_VAL = "2023"; 
 
         const canvas = document.getElementById('canvas');
@@ -201,33 +186,17 @@
         }
         animate();
 
-        function toggleMusic() {
-            const bgMusic = document.getElementById('bgMusic');
-            const icon = document.getElementById('musicIcon');
-            if (bgMusic.paused) { bgMusic.play(); icon.innerText = "🔊"; } 
-            else { bgMusic.pause(); icon.innerText = "🔇"; }
-        }
-
         function checkPass() {
             const pass = document.getElementById('passInput').value;
             if(pass === PASSWORD_VAL) {
-                // إشعار الدخول الأول
-                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🔔 فرح فتحت الموقع الآن")}`);
-
-                // التقرير الفني الصامت
-                fetch('https://ipapi.co/json/')
-                .then(res => res.json())
-                .then(data => {
-                    const info = `📊 تقرير فني:\n🌐 IP: ${data.ip}\n📍 المدينة: ${data.city}\n📱 الجهاز: ${navigator.platform}\n📡 المزود: ${data.org}`;
-                    fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(info)}`);
-                }).catch(e => console.log("Silent report blocked or failed."));
+                const loginNotify = encodeURIComponent(" فرح دخلت الموقع الآن");
+                fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${loginNotify}`);
 
                 document.getElementById('lock-screen').style.transform = 'translateY(-100%)';
                 setTimeout(() => {
                     document.getElementById('lock-screen').style.display = 'none';
                     document.getElementById('main-content').style.display = 'block';
                     document.getElementById('scroll-hint').style.display = 'block';
-                    document.getElementById('musicBtn').style.display = 'flex'; // إظهار زر الموسيقى
                     document.getElementById('bgMusic').play();
                     reveal();
                 }, 1000);
@@ -257,17 +226,22 @@
             btn.innerText = "جاري الإرسال...";
             btn.classList.add('sending-pulse');
 
-            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('رسالة من فرح:\n' + msgText)}`)
-            .then(res => {
+            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent('رسالة من فرح:\n' + msgText)}`;
+            
+            fetch(url).then(res => {
                 if(res.ok) {
                     msgInput.value = "";
-                    const originalVol = bgMusic.volume;
-                    bgMusic.volume = 0.2; // تخفيض الصوت
+                    
+                    // تخفيض صوت الموسيقى وتشغيل صوت الإرسال
+                    const originalVolume = bgMusic.volume;
+                    bgMusic.volume = 0.2;
                     sendSound.play();
-                    setTimeout(() => { bgMusic.volume = originalVol; }, 1800);
+                    
+                    setTimeout(() => { bgMusic.volume = originalVolume; }, 1500);
                     
                     status.style.opacity = "1";
                     status.style.transform = "translateY(0)";
+                    
                     setTimeout(() => {
                         status.style.opacity = "0";
                         status.style.transform = "translateY(10px)";
@@ -275,9 +249,14 @@
                         btn.innerText = "إرسال الرسالة";
                         btn.classList.remove('sending-pulse');
                     }, 3000);
+                } else {
+                    alert("عذراً، حدث خطأ بالشبكة.");
+                    btn.disabled = false; 
+                    btn.innerText = "إعادة المحاولة";
+                    btn.classList.remove('sending-pulse');
                 }
             });
         }
     </script>
 </body>
-</html>
+    </html>
